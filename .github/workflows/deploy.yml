@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: ["main"]
+    branches: ["master"]
   workflow_dispatch:
 
 permissions:
@@ -27,19 +27,22 @@ jobs:
         with:
           node-version: 20
           cache: npm
+          cache-dependency-path: Leberstory/package-lock.json
 
       - name: Install dependencies
         run: npm ci
+        working-directory: Leberstory
 
       - name: Build
         run: npm run build
+        working-directory: Leberstory
         env:
-          VITE_GA_MEASUREMENT_ID: ${{ secrets.VITE_GA_MEASUREMENT_ID }}
+          VITE_BASE_PATH: /LiverCancer-second-wave/
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
+          path: ./Leberstory/dist
 
   deploy:
     environment:
