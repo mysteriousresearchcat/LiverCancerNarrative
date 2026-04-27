@@ -4,13 +4,14 @@ This service provides a shared condition pool for the wave-2 top-up study.
 
 ## Render Deployment
 
-This repo includes a root-level [render.yaml](/abs/path/c:/Users/LuisaF/Documents/New%20project/render.yaml:1) that defines a Render web service for this allocator.
+This repo includes a root-level [render.yaml](/abs/path/c:/Users/LuisaF/Documents/New%20project/render.yaml:1) that defines the basic Render web service for this allocator.
 
 Render setup notes:
 
 - Use the repo `LuisaSusanneFlaig/LiverCancer-second-wave`
 - The service root directory is `allocator-service`
-- The service uses a persistent disk mounted at `/opt/render/project/src/data`
+- Add a persistent disk manually in the Render dashboard
+- Mount the disk at `/opt/render/project/src/allocator-service/data`
 - The allocator state file is stored under that disk-backed directory
 
 Why the disk is required:
@@ -29,7 +30,7 @@ Suggested manual values in Render:
 - `ALLOCATOR_ADMIN_TOKEN`
   - set this manually in the Render dashboard
 - `ALLOCATOR_ALLOWED_ORIGINS`
-  - default in `render.yaml` is `https://luisasusanneflaig.github.io`
+  - set this manually to `https://luisasusanneflaig.github.io`
   - if you later use a custom domain, update this value to that origin
 
 ## Start
