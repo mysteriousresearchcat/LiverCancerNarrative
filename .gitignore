@@ -1,0 +1,6 @@
+*
+!.gitignore
+!Leberstory/
+!Leberstory/**
+!allocator-service/
+!allocator-service/**

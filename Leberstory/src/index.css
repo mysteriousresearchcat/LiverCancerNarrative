@@ -1,0 +1,281 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+
+
+
+/* ================================
+   THEME TOKENS
+================================ */
+:root {
+  --bg: #0d243a;
+  --text: #e2edf8;
+  --nav-active: #83b3e3;
+}
+
+html.theme-blue,
+body.theme-blue {
+  --bg: #0d243a;
+  --text: #e2edf8;
+  --nav-active: #83b3e3;
+}
+
+html.theme-green,
+body.theme-green {
+  --bg: #0b2a1a;
+  --text: #e8fff2;
+  --nav-active: #8fe382;
+}
+
+html.theme-red,
+body.theme-red {
+  --bg: #2a0b10;
+  --text: #ffe8ee;
+  --nav-active: #e38286;
+}
+
+
+/* ================================
+   BASE STYLES
+================================ */
+@layer base {
+  html,
+  body {
+    width: 100%;
+    background-color: var(--bg);
+    color: var(--text);
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    font-family: 'Inter', sans-serif;
+    line-height: 1.5;
+  }
+}
+
+
+/* ================================
+   UTILITIES
+================================ */
+@layer utilities {
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+
+  .col-center {
+    @apply flex flex-col items-center justify-center;
+  }
+}
+
+
+/* ================================
+   COMPONENTS
+================================ */
+@layer components {
+
+  /* Layout */
+  main {
+    @apply w-full overflow-x-hidden;
+  }
+
+  /* Navigation */
+  nav {
+    @apply fixed z-50 w-full;
+    background-color: var(--bg);
+    background-color: color-mix(in srgb, var(--bg) 78%, transparent);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(8px);
+  }
+
+  nav > div {
+    @apply mx-auto max-w-7xl px-3 py-2
+           flex flex-row items-center justify-between gap-2
+           md:px-5 md:py-3;
+  }
+
+  nav p {
+    @apply text-xs sm:text-sm lg:text-3xl;
+  }
+
+  nav a {
+    @apply cursor-pointer text-nowrap text-xs sm:text-sm lg:text-3xl;
+    transition: color 0.3s ease;
+    color: var(--text);
+  }
+
+  nav a.active {
+    color: var(--nav-active);
+  }
+
+  nav ul {
+    @apply flex items-center gap-3 sm:gap-4 lg:gap-12;
+  }
+
+  h2 {
+    @apply md:flex-1 text-3xl sm:text-4xl md:text-7xl lg:text-7xl font-medium leading-tight;
+  }
+
+  p {
+    @apply md:flex-1 text-base/relaxed sm:text-lg/relaxed md:text-3xl/relaxed lg:text-2xl/relaxed xl:text-3xl/relaxed font-medium;
+  }
+
+  li {
+    @apply md:flex-1 text-2xl sm:text-3xl md:text-4xl font-medium;
+  }
+
+  .icon-grid-label {
+    @apply text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl leading-snug font-medium;
+  }
+
+  #sectiondreizehn .prognosis-icon-box {
+    width: 7.5rem;
+    height: 7.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-inline: auto;
+  }
+
+  #sectiondreizehn .prognosis-icon-box--wide {
+    width: 7.5rem;
+    height: 7.5rem;
+  }
+
+  #sectiondreizehn .prognosis-rate-icon,
+  #sectiondreizehn .prognosis-step2-icon,
+  #sectiondreizehn .prognosis-step3-icon {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  /* Sections */
+  #hero {
+    @apply w-full min-h-dvh;
+  }
+
+  #hero h1 {
+    @apply mt-28 sm:mt-32 md:mt-32
+           text-8xl sm:text-8xl lg:text-[8rem]
+           leading-none text-center;
+  }
+
+  #hero h3 {
+    @apply mt-5 sm:mt-5 md:mt-5
+           text-center leading-none
+           text-sm sm:text-base ;
+  }
+
+  #hero p {
+    @apply mt-4 sm:mt-6 text-center
+           text-base sm:text-lg md:text-xl;
+  }
+
+  #leber .hero-3d-layout,
+  #organe .hero-3d-layout,
+  #sectionsieben .hero-3d-layout {
+    width: 100%;
+    height: clamp(280px, 52vh, 560px);
+    min-height: 280px;
+  }
+
+  @media (min-width: 768px) {
+    #leber .hero-3d-layout,
+    #organe .hero-3d-layout,
+    #sectionsieben .hero-3d-layout {
+      height: clamp(360px, 58vh, 640px);
+      min-height: 360px;
+    }
+  }
+
+  @media (min-width: 1024px) and (max-height: 820px) {
+    .split-panel {
+      justify-content: flex-start;
+      gap: 1rem;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+      padding-top: 4.5rem;
+      padding-bottom: 2rem;
+    }
+
+    .split-panel__column {
+      width: 100%;
+      min-width: 0;
+      align-items: flex-start;
+      justify-content: flex-start;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-left: 1rem;
+      padding-right: 1rem;
+      padding-top: 1.5rem;
+      padding-bottom: 1.5rem;
+    }
+
+    .split-panel__column > * {
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .split-panel__column p:not(.icon-grid-label) {
+      font-size: 1.5rem;
+      line-height: 1.45;
+    }
+
+    .split-panel__column img {
+      width: auto;
+      max-width: 100%;
+      height: auto;
+      object-fit: contain;
+      align-self: center;
+    }
+
+    #sectiondreizehn .prognosis-centered-column {
+      align-items: center;
+      justify-content: center;
+    }
+
+    #sectiondreizehn .prognosis-rate-block {
+      width: auto;
+      max-width: 100%;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    #sectiondreizehn .prognosis-step2-icons {
+      width: 100%;
+      max-width: 22rem;
+      margin-inline: auto;
+      justify-items: center;
+    }
+
+    #sectiondreizehn .prognosis-step2-block,
+    #sectiondreizehn .prognosis-step3-text,
+    #sectiondreizehn .prognosis-step3 {
+      width: 100%;
+      max-width: 100%;
+      margin-inline: auto;
+      text-align: center;
+    }
+
+    #sectiondreizehn .prognosis-icon-box {
+      width: 5rem;
+      height: 5rem;
+    }
+
+    #sectiondreizehn .prognosis-icon-box--wide {
+      width: 5rem;
+      height: 5rem;
+    }
+
+    #sectiondreizehn .prognosis-step3 {
+      margin-top: 0;
+    }
+  }
+
+}
