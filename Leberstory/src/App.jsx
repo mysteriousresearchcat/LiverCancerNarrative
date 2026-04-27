@@ -205,47 +205,6 @@ const App = () => {
   const sharedAllocatorExhausted =
     !hasValidCond && usesSharedAllocator && allocation?.exhausted && !allocation?.condition;
 
-  if (awaitingSharedAllocation) {
-    return (
-      <main className="min-h-screen flex items-center justify-center px-6 text-center">
-        <div className="max-w-xl">
-          <h1 className="text-3xl font-semibold">Preparing your study version...</h1>
-          <p className="mt-4 text-lg">
-            Your condition is being assigned. This should only take a moment.
-          </p>
-        </div>
-      </main>
-    );
-  }
-
-  if (sharedAllocatorExhausted) {
-    const fullStudyReturnUrl = buildSurveyReturnUrl(surveyToken, {
-      pid,
-      allocatorMode: allocationMode,
-      allocationSource,
-      allocatorBackend: allocationBackend,
-    });
-
-    return (
-      <main className="min-h-screen flex items-center justify-center px-6 text-center">
-        <div className="max-w-2xl">
-          <h1 className="text-3xl font-semibold">This study is currently full.</h1>
-          <p className="mt-4 text-lg">
-            All remaining condition slots have already been assigned.
-          </p>
-          {fullStudyReturnUrl ? (
-            <a
-              href={fullStudyReturnUrl}
-              className="mt-8 inline-flex items-center justify-center rounded-full border border-white/40 bg-white px-6 py-3 text-base font-semibold text-slate-900 shadow-lg transition hover:bg-slate-100"
-            >
-              Return to the questionnaire
-            </a>
-          ) : null}
-        </div>
-      </main>
-    );
-  }
-
   const activeCondition =
     conditionFromUrl ||
     (IS_DEV && (hasValidVersion || hasValidTheme)
@@ -380,6 +339,47 @@ const App = () => {
         .filter(Boolean)
     );
   }, [sectionGroups]);
+
+  if (awaitingSharedAllocation) {
+    return (
+      <main className="min-h-screen flex items-center justify-center px-6 text-center">
+        <div className="max-w-xl">
+          <h1 className="text-3xl font-semibold">Preparing your study version...</h1>
+          <p className="mt-4 text-lg">
+            Your condition is being assigned. This should only take a moment.
+          </p>
+        </div>
+      </main>
+    );
+  }
+
+  if (sharedAllocatorExhausted) {
+    const fullStudyReturnUrl = buildSurveyReturnUrl(surveyToken, {
+      pid,
+      allocatorMode: allocationMode,
+      allocationSource,
+      allocatorBackend: allocationBackend,
+    });
+
+    return (
+      <main className="min-h-screen flex items-center justify-center px-6 text-center">
+        <div className="max-w-2xl">
+          <h1 className="text-3xl font-semibold">This study is currently full.</h1>
+          <p className="mt-4 text-lg">
+            All remaining condition slots have already been assigned.
+          </p>
+          {fullStudyReturnUrl ? (
+            <a
+              href={fullStudyReturnUrl}
+              className="mt-8 inline-flex items-center justify-center rounded-full border border-white/40 bg-white px-6 py-3 text-base font-semibold text-slate-900 shadow-lg transition hover:bg-slate-100"
+            >
+              Return to the questionnaire
+            </a>
+          ) : null}
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main>
