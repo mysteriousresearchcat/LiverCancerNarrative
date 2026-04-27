@@ -38,6 +38,7 @@ jobs:
         working-directory: Leberstory
         env:
           VITE_BASE_PATH: /LiverCancer-second-wave/
+          VITE_ALLOCATOR_API_URL: ${{ vars.VITE_ALLOCATOR_API_URL }}
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
