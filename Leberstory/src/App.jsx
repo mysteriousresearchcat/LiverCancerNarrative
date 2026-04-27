@@ -223,7 +223,7 @@ const App = () => {
       pid,
       allocatorMode: allocationMode,
       allocationSource,
-      allocatorBackend,
+      allocatorBackend: allocationBackend,
     });
 
     return (
@@ -266,7 +266,7 @@ const App = () => {
         pid,
         allocatorMode: allocationMode,
         allocationSource,
-        allocatorBackend,
+        allocatorBackend: allocationBackend,
       }),
     [
       allocationBackend,
