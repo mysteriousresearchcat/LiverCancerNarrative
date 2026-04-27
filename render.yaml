@@ -1,0 +1,20 @@
+services:
+  - name: livercancer-second-wave-allocator
+    type: web
+    runtime: node
+    plan: starter
+    region: frankfurt
+    rootDir: allocator-service
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    autoDeployTrigger: commit
+    disk:
+      name: allocator-data
+      mountPath: /opt/render/project/src/data
+      sizeGB: 1
+    envVars:
+      - key: ALLOCATOR_ALLOWED_ORIGINS
+        value: https://luisasusanneflaig.github.io
+      - key: ALLOCATOR_ADMIN_TOKEN
+        sync: false

@@ -2,6 +2,7 @@
 !.gitignore
 !.github/
 !.github/**
+!render.yaml
 !Leberstory/
 !Leberstory/**
 !allocator-service/
