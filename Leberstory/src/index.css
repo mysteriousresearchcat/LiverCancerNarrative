@@ -53,6 +53,7 @@ body.theme-red {
     overflow-x: hidden;
     font-family: 'Inter', sans-serif;
     line-height: 1.5;
+    scroll-padding-top: 130px;
   }
 }
 
@@ -83,7 +84,7 @@ body.theme-red {
 
   /* Navigation */
   nav {
-    @apply fixed z-50 w-full;
+    @apply fixed top-0 left-0 z-50 w-full;
     background-color: var(--bg);
     background-color: color-mix(in srgb, var(--bg) 78%, transparent);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);

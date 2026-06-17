@@ -1,5 +1,6 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { navLinksByVersion, sectionGroupsByVersion } from "../../constants";
+import { ConditionSelectorButton } from "./ConditionSelector";
 
 const Navbar = ({ version = "A" }) => {
   const sectionGroups =
@@ -55,19 +56,22 @@ const Navbar = ({ version = "A" }) => {
   return (
     <nav>
       <div className="flex items-center justify-between w-full gap-2">
-        <ul className="flex flex-1 min-w-0 gap-3 overflow-x-auto whitespace-nowrap">
-          {navLinks.map((link) => (
-            <li key={link.id}>
-              <a
-                href={`#${link.id}`}
-                data-link={link.id}
-                className="px-2 py-0.5"
-              >
-                {link.title}
-              </a>
-            </li>
-          ))}
-        </ul>
+        <div className="flex items-center gap-2">
+          <ConditionSelectorButton />
+          <ul className="flex flex-1 min-w-0 gap-3 overflow-x-auto whitespace-nowrap">
+            {navLinks.map((link) => (
+              <li key={link.id}>
+                <a
+                  href={`#${link.id}`}
+                  data-link={link.id}
+                  className="px-2 py-0.5"
+                >
+                  {link.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </nav>
   );

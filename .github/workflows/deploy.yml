@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: ["master"]
+    branches: ["main"]
   workflow_dispatch:
 
 permissions:
@@ -37,7 +37,7 @@ jobs:
         run: npm run build
         working-directory: Leberstory
         env:
-          VITE_BASE_PATH: /LiverCancer-second-wave/
+          VITE_BASE_PATH: /LiverCancerNarrative/
           VITE_ALLOCATOR_API_URL: ${{ vars.VITE_ALLOCATOR_API_URL }}
 
       - name: Upload Pages artifact

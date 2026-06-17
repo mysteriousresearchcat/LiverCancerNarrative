@@ -5,6 +5,7 @@ import { narratives, componentMap } from "../constants/narratives";
 import { sectionGroupsByVersion } from "../constants";
 import { ScrollTrigger, SplitText } from "gsap/all";
 import Navbar from "./components/Navbar";
+import ConditionSelector, { ConditionSelectorProvider } from "./components/ConditionSelector";
 import {
   allocateSharedCondition,
   getSharedAllocatorApiUrl,
@@ -433,28 +434,40 @@ const App = () => {
   }
 
   return (
-    <main>
-      <Navbar version={version} theme={theme} />
+    <ConditionSelectorProvider>
+      <main>
+        <ConditionSelector 
+          conditions={CONDITIONS}
+          activeCondition={activeCondition}
+          onSelect={(selectedCondition) => {
+            const next = new URLSearchParams(searchParams);
+            next.set("cond", selectedCondition.cond);
+            setSearchParams(next);
+          }}
+        />
+        
+        <Navbar version={version} theme={theme} />
 
-      {selectedNarrative.map((section, index) => {
-        const Component = componentMap[section.name];
-        if (!Component) return null;
+        {selectedNarrative.map((section, index) => {
+          const Component = componentMap[section.name];
+          if (!Component) return null;
 
-        return (
-          <Component
-            key={`${section.name}-${index}`}
-            theme={theme}
-            version={version}
-            pid={pid}
-            cond={cond}
-            surveyToken={surveyToken}
-            surveyReturnUrl={surveyReturnUrl}
-            chapterIntro={chapterIntroNames.has(section.name)}
-            {...section.props}
-          />
-        );
-      })}
-    </main>
+          return (
+            <Component
+              key={`${section.name}-${index}`}
+              theme={theme}
+              version={version}
+              pid={pid}
+              cond={cond}
+              surveyToken={surveyToken}
+              surveyReturnUrl={surveyReturnUrl}
+              chapterIntro={chapterIntroNames.has(section.name)}
+              {...section.props}
+            />
+          );
+        })}
+      </main>
+    </ConditionSelectorProvider>
   );
 };
 
