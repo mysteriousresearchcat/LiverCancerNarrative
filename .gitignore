@@ -1,6 +1,12 @@
 *
 !README.md
+!index.html
+!assets/
+!assets/**
+!meshes/
+!meshes/**
 !docs/
+!docs/**
 !.gitignore
 !.github/
 !.github/**

@@ -109,7 +109,9 @@ const App = () => {
   const allocatorModeParam = (searchParams.get("allocator") || "hash").toLowerCase();
   const allocatorMode = allocatorModeParam === "quota" ? "quota" : "hash";
   const shouldResetAllocator = searchParams.get("allocator_reset") === "1";
-  const usesSharedAllocator = allocatorMode === "quota" && Boolean(SHARED_ALLOCATOR_API_URL);
+  const requiresSharedAllocator = allocatorMode === "quota";
+  const sharedAllocatorAvailable = Boolean(SHARED_ALLOCATOR_API_URL);
+  const usesSharedAllocator = requiresSharedAllocator && sharedAllocatorAvailable;
 
   const hasValidVersion = VALID_VERSIONS.includes(urlVersionRaw);
   const hasValidTheme = VALID_THEMES.includes(urlThemeRaw);
@@ -125,7 +127,7 @@ const App = () => {
       return null;
     }
 
-    if (usesSharedAllocator) {
+    if (requiresSharedAllocator) {
       return null;
     }
 
@@ -152,7 +154,7 @@ const App = () => {
       return;
     }
 
-    if (!usesSharedAllocator) {
+    if (!requiresSharedAllocator) {
       setAllocation(
         resolveConditionAllocation({
           pid,
@@ -161,6 +163,12 @@ const App = () => {
         })
       );
       setAllocationError("");
+      return;
+    }
+
+    if (!sharedAllocatorAvailable) {
+      setAllocation(null);
+      setAllocationError("Shared allocator API URL is not configured");
       return;
     }
 
@@ -175,53 +183,65 @@ const App = () => {
       })
       .catch((error) => {
         if (cancelled) return;
-
-        setAllocation(
-          resolveConditionAllocation({
-            pid,
-            conditions: CONDITIONS,
-            mode: allocatorMode,
-          })
-        );
         setAllocationError(error.message || "Shared allocator unavailable");
       });
 
     return () => {
       cancelled = true;
     };
-  }, [allocatorMode, hasValidCond, pid, shouldResetAllocator, usesSharedAllocator]);
+  }, [
+    allocatorMode,
+    hasValidCond,
+    pid,
+    requiresSharedAllocator,
+    sharedAllocatorAvailable,
+    shouldResetAllocator,
+  ]);
 
   const hashAssigned = resolveConditionAllocation({
     pid,
     conditions: CONDITIONS,
     mode: "hash",
   }).condition;
-  const assigned = allocation?.condition || (!usesSharedAllocator ? hashAssigned : null);
+  const assigned = allocation?.condition || (!requiresSharedAllocator ? hashAssigned : null);
   const allocationMode = allocation?.mode || "hash";
   const allocationSource = allocation?.source || "pid_hash";
-  const allocationBackend = allocation?.backend || (usesSharedAllocator ? "shared_api" : "local");
+  const allocationBackend =
+    allocation?.backend ||
+    (requiresSharedAllocator
+      ? sharedAllocatorAvailable
+        ? "shared_api"
+        : "shared_api_unavailable"
+      : "local");
   const awaitingSharedAllocation =
-    !hasValidCond && usesSharedAllocator && allocation === null && !allocationError;
+    !hasValidCond && requiresSharedAllocator && allocation === null && !allocationError;
+  const sharedAllocatorFailed =
+    !hasValidCond && requiresSharedAllocator && allocation === null && Boolean(allocationError);
   const sharedAllocatorExhausted =
-    !hasValidCond && usesSharedAllocator && allocation?.exhausted && !allocation?.condition;
+    !hasValidCond && requiresSharedAllocator && allocation?.exhausted && !allocation?.condition;
 
+  const resolvedCondition =
+    conditionFromUrl || assigned || (!requiresSharedAllocator ? hashAssigned : null);
   const activeCondition =
     conditionFromUrl ||
     (IS_DEV && (hasValidVersion || hasValidTheme)
       ? {
-          cond: (assigned || hashAssigned).cond,
-          version: hasValidVersion ? urlVersionRaw : (assigned || hashAssigned).version,
-          theme: hasValidTheme ? urlThemeRaw : (assigned || hashAssigned).theme,
+          cond: (resolvedCondition || hashAssigned).cond,
+          version: hasValidVersion ? urlVersionRaw : (resolvedCondition || hashAssigned).version,
+          theme: hasValidTheme ? urlThemeRaw : (resolvedCondition || hashAssigned).theme,
         }
-      : assigned || hashAssigned);
+      : resolvedCondition || CONDITIONS[0]);
 
   const { version, theme, cond } = activeCondition;
+  const returnedCond = resolvedCondition?.cond || "";
+  const returnedVersion = resolvedCondition?.version || "";
+  const returnedTheme = resolvedCondition?.theme || "";
   const surveyReturnUrl = useMemo(
     () =>
       buildSurveyReturnUrl(surveyToken, {
-        cond,
-        version,
-        theme,
+        cond: returnedCond,
+        version: returnedVersion,
+        theme: returnedTheme,
         pid,
         allocatorMode: allocationMode,
         allocationSource,
@@ -231,11 +251,11 @@ const App = () => {
       allocationBackend,
       allocationMode,
       allocationSource,
-      cond,
       pid,
+      returnedCond,
+      returnedTheme,
+      returnedVersion,
       surveyToken,
-      theme,
-      version,
     ]
   );
 
@@ -254,11 +274,11 @@ const App = () => {
         changed = true;
       }
       if (!hasValidVersion) {
-        next.set("version", version);
+        next.set("version", activeCondition.version);
         changed = true;
       }
       if (!hasValidTheme) {
-        next.set("theme", theme);
+        next.set("theme", activeCondition.theme);
         changed = true;
       }
     } else {
@@ -283,14 +303,14 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     assigned,
+    activeCondition.theme,
+    activeCondition.version,
     hasValidCond,
     hasValidTheme,
     hasValidVersion,
     pid,
     searchParams,
     setSearchParams,
-    theme,
-    version,
   ]);
 
   useLayoutEffect(() => {
@@ -308,9 +328,9 @@ const App = () => {
     sessionStorage.setItem(
       "study_context",
       JSON.stringify({
-        cond,
-        version,
-        theme,
+        cond: returnedCond,
+        version: returnedVersion,
+        theme: returnedTheme,
         pid,
         surveyToken,
         allocationBackend,
@@ -322,11 +342,11 @@ const App = () => {
     allocationBackend,
     allocationMode,
     allocationSource,
-    cond,
     pid,
+    returnedCond,
+    returnedTheme,
+    returnedVersion,
     surveyToken,
-    theme,
-    version,
   ]);
 
   const selectedNarrative = narratives[version] || narratives.A;
@@ -381,13 +401,39 @@ const App = () => {
     );
   }
 
+  if (sharedAllocatorFailed) {
+    const errorStudyReturnUrl = buildSurveyReturnUrl(surveyToken, {
+      pid,
+      allocatorMode: "quota",
+      allocationSource: "shared_allocator_error",
+      allocatorBackend: allocationBackend,
+    });
+
+    return (
+      <main className="min-h-screen flex items-center justify-center px-6 text-center">
+        <div className="max-w-2xl">
+          <h1 className="text-3xl font-semibold">This study is temporarily unavailable.</h1>
+          <p className="mt-4 text-lg">
+            We could not assign a study version safely, so no condition has been shown.
+          </p>
+          <p className="mt-3 text-base text-slate-300">
+            Please return to the questionnaire so the researcher can decide how to proceed.
+          </p>
+          {errorStudyReturnUrl ? (
+            <a
+              href={errorStudyReturnUrl}
+              className="mt-8 inline-flex items-center justify-center rounded-full border border-white/40 bg-white px-6 py-3 text-base font-semibold text-slate-900 shadow-lg transition hover:bg-slate-100"
+            >
+              Return to the questionnaire
+            </a>
+          ) : null}
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main>
-      {allocationError ? (
-        <div className="px-4 py-3 text-center text-sm text-amber-200 bg-amber-950/60">
-          Shared allocator unavailable. Falling back to browser-local quota mode for this session.
-        </div>
-      ) : null}
       <Navbar version={version} theme={theme} />
 
       {selectedNarrative.map((section, index) => {
