@@ -174,7 +174,7 @@ A: [
   {
     name: "Sectionacht",
     props: {
-      heading: { de: "Wie macht sich Leberkrebs bemerkbar?", en: "What Are the Symptoms of Liver Cancer?" },
+      heading: { de: "Wie macht sich Leberkrebs bemerkbar?", en: "How Does Liver Cancer Present Itself?" },
       introText: {
         de: "Da die Leber nicht schmerzempfindlich ist, verursacht Leberkrebs in der Regel zunächst keine Symptome. Im fortgeschrittenen Stadium äußert sich Leberkrebs auf verschiedene Weise.",
         en: "Because the liver itself is not sensitive to pain, liver cancer usually causes no symptoms at first. At an advanced stage, it can present in different ways.",
@@ -182,11 +182,11 @@ A: [
       items: [
         { assetKey: "scale", text: { de: "Abnehmen ohne Anstrengung", en: "Unintentional weight loss" } },
         { assetKey: "junkfood", text: { de: "Appetitlosigkeit", en: "Loss of appetite" } },
-        { assetKey: "temperature", text: { de: "Erhöhte Temperatur", en: "Fever" } },
+        { assetKey: "temperature", text: { de: "Erhöhte Temperatur", en: "Elevated temperature" } },
         { assetKey: "stroke", text: { de: "Schmerzen im Oberbauch", en: "Upper abdominal pain" } },
         { assetKey: "fatigue", text: { de: "Schwäche und Müdigkeit", en: "Weakness and fatigue" } },
         { assetKey: "weightgain", text: { de: "Schwellungen des Bauches", en: "Abdominal swelling" } },
-        { assetKey: "nausea", text: { de: "Gelbe Hautverfärbung", en: "Yellowing of the skin (jaundice)" } },
+        { assetKey: "nausea", text: { de: "Gelbe Hautverfärbung", en: "Yellowing of the skin" } },
       ],
     },
   },
@@ -205,13 +205,13 @@ A: [
 
       methodsIntro: {
         de: "Zum Auffinden von Lebertumoren können verschiedene bildgebende Verfahren eingesetzt werden, darunter:",
-        en: "To detect liver tumors, different imaging methods can be used, including:",
+        en: "Different imaging methods can be used to detect liver tumors, including:",
       },
       method1ImageKey: "ultraschall",
       method1Label: { de: "Ultraschall", en: "Ultrasound" },
 
       method2ImageKey: "CT",
-      method2Label: { de: "CT", en: "CT scan" },
+      method2Label: { de: "CT", en: "CT" },
 
       method3ImageKey: "MRT",
       method3Label: { de: "MRT", en: "MRI" },

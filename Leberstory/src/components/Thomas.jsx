@@ -43,28 +43,43 @@ const Thomas = ({
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
+      // Timeline units: hold panel 1 → cross-fade to panel 2 → hold panel 2.
+      // The pin distance is shorter than the shared panelEnd because this
+      // section only has a single transition.
+      const transition = 1.2;
+      const hold = 1;
+
+      gsap.set(panel2Ref.current, { y: "30%", opacity: 0 });
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: triggerRef.current,
           start: "top top",
-          end: animationConfig.scrollTrigger.panelEnd,
+          end: "+=300%",
           scrub: animationConfig.scrollTrigger.scrub,
           pin: true,
         },
       });
 
+      // Keep the intro text fully readable before anything moves.
+      tl.to({}, { duration: hold });
+
       tl.to(panel1Ref.current, {
         opacity: 0,
         y: -100,
-        duration: animationConfig.panel.transitionDuration,
+        duration: transition,
+        ease: "power1.in",
       });
 
-      tl.fromTo(
+      // Start panel 2 before panel 1 is gone so there is no empty screen.
+      tl.to(
         panel2Ref.current,
-        { y: "100%", opacity: 0 },
-        { y: "0%", opacity: 1, duration: animationConfig.panel.transitionDuration }
+        { y: "0%", opacity: 1, duration: transition, ease: "power1.out" },
+        `-=${transition * 0.5}`
       );
-      tl.to({}, { duration: animationConfig.panel.holdDuration });
+
+      // Let the image stay on screen before the section unpins.
+      tl.to({}, { duration: hold * 1.5 });
     }, triggerRef);
 
     return () => ctx.revert();
