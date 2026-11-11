@@ -106,7 +106,9 @@ const App = () => {
     "";
   const urlVersionRaw = (searchParams.get("version") || "").toUpperCase();
   const urlThemeRaw = (searchParams.get("theme") || "").toLowerCase();
-  const urlCondRaw = searchParams.get("cond") || "";
+  // Without a participant ID or an explicit ?cond=, show condition 1 (Version A, blue)
+  // instead of a hash-based assignment.
+  const urlCondRaw = searchParams.get("cond") || (pidFromUrl ? "" : "1");
   const allocatorModeParam = (searchParams.get("allocator") || "hash").toLowerCase();
   const allocatorMode = allocatorModeParam === "quota" ? "quota" : "hash";
   const shouldResetAllocator = searchParams.get("allocator_reset") === "1";
@@ -272,6 +274,10 @@ const App = () => {
     if (IS_DEV) {
       if (!hasValidCond && assigned) {
         next.set("cond", assigned.cond);
+        changed = true;
+      } else if (hasValidCond && !searchParams.get("cond")) {
+        // Keep the default condition in the URL so adding the dev pid doesn't switch it.
+        next.set("cond", conditionFromUrl.cond);
         changed = true;
       }
       if (!hasValidVersion) {

@@ -106,7 +106,12 @@ const Thomas = ({
       {/* PANEL 2 */}
       {panel2Variant === "image" ? (
         <CenterPanel ref={panel2Ref}>
-          <img src={resolvedPanel2ImageSrc} alt={resolvedPanel2ImageAlt} />
+          {/* Cap the height so the image fits below the navbar on short screens. */}
+          <img
+            src={resolvedPanel2ImageSrc}
+            alt={resolvedPanel2ImageAlt}
+            className="max-h-[70vh] w-auto object-contain"
+          />
         </CenterPanel>
       ) : (
         <SplitPanel
