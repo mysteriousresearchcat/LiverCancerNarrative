@@ -460,7 +460,9 @@ const App = () => {
 
           return (
             <Component
-              key={`${section.name}-${index}`}
+              // Include version and theme so switching condition remounts every
+              // section and its GSAP ScrollTrigger is rebuilt for the new layout.
+              key={`${version}-${theme}-${section.name}-${index}`}
               theme={theme}
               version={version}
               pid={pid}
